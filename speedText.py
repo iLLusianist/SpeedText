@@ -12,8 +12,8 @@ class Game:
         self.gameStart = False
         self.gameDone = False 
                 
-        self.maxNameLength = 11
-        self.leaderboardCount = 33
+        self.MAX_NAME_LENGTH = 11
+        self.LEADERBOARD_COUNT = 33
 
         #Подключение к БД
         self.connection = sqlite3.connect('SpeedText_Leaderboard.db')
@@ -34,34 +34,34 @@ class Game:
         self.connection.commit()       
 
         #Базовые значения 
-        self.width = 1400
-        self.height = 900
-        self.backgroundColor = (17, 25, 28)
-        self.textColor = (168, 208, 224)
-        self.textSize = 40
-        self.menuTextSize = 60
-        self.menuTextIndent = 10
+        self.WIDTH = 1400
+        self.HEIGHT = 900
+        self.BACKGROUND_COLOR = (17, 25, 28)
+        self.TEXT_COLOR = (168, 208, 224)
+        self.TEXT_SIZE = 40
+        self.MENU_TEXT_SIZE = 60
+        self.MENU_TEXT_INDENT = 10
 
         pg.init()
 
         #Создание шрифтов
-        self.fontMenu = pg.font.SysFont("Arial", self.menuTextSize)
-        self.fontGame = pg.font.SysFont("Arial", self.textSize)
-        self.screen = pg.display.set_mode((self.width, self.height))
+        self.fontMenu = pg.font.SysFont("Arial", self.MENU_TEXT_SIZE)
+        self.fontGame = pg.font.SysFont("Arial", self.TEXT_SIZE)
+        self.screen = pg.display.set_mode((self.WIDTH, self.HEIGHT))
         
         #Определение границ кнопок на главном меню
         self.enterBox = []
         self.menuButtons = [                                                                        
-            [self.width/2-self.fontMenu.size("Старт")[0]/2, 
-                self.height/2-self.menuTextSize*1.5-self.menuTextIndent, 
+            [self.WIDTH/2-self.fontMenu.size("Старт")[0]/2, 
+                self.HEIGHT/2-self.MENU_TEXT_SIZE*1.5-self.MENU_TEXT_INDENT, 
                 self.fontMenu.size("Старт")[0], 
                 60],
-            [self.width/2-self.fontMenu.size("Рекорды")[0]/2, 
-                self.height/2-self.menuTextSize/2, 
+            [self.WIDTH/2-self.fontMenu.size("Рекорды")[0]/2, 
+                self.HEIGHT/2-self.MENU_TEXT_SIZE/2, 
                 self.fontMenu.size("Рекорды")[0], 
                 60],
-            [self.width/2-self.fontMenu.size("Выход")[0]/2, 
-                self.height/2+self.menuTextSize/2+self.menuTextIndent, 
+            [self.WIDTH/2-self.fontMenu.size("Выход")[0]/2, 
+                self.HEIGHT/2+self.MENU_TEXT_SIZE/2+self.MENU_TEXT_INDENT, 
                 self.fontMenu.size("Выход")[0], 
                 60]
         ]
@@ -97,10 +97,10 @@ class Game:
          
     def gameComplited(self):
         #Вывод итогов
-        self.screen.fill(self.backgroundColor)
+        self.screen.fill(self.BACKGROUND_COLOR)
         self.drawText(self.screen, 
                       f"Поздравляю, {self.name}. Со старта прошло: {self.minutes} минут{self.getSuf(self.minutes)} {self.seconds} секунд{self.getSuf(self.seconds)} ", 
-                      self.width/2, self.height/2, self.textSize, self.textColor)
+                      self.WIDTH/2, self.HEIGHT/2, self.TEXT_SIZE, self.TEXT_COLOR)
 
         #Попытка записать результат в БД
         try: 
@@ -117,11 +117,11 @@ class Game:
 
     def drawGameScreen(self, started):
         #Вывод меню ввода имени
-        self.screen.fill(self.backgroundColor)
-        self.drawText(self.screen, self.taskText, self.width/2, self.height/2-100, self.textSize, self.textColor)
-        pg.draw.rect(self.screen, self.textColor, self.enterBox, 1)
+        self.screen.fill(self.BACKGROUND_COLOR)
+        self.drawText(self.screen, self.taskText, self.WIDTH/2, self.HEIGHT/2-100, self.TEXT_SIZE, self.TEXT_COLOR)
+        pg.draw.rect(self.screen, self.TEXT_COLOR, self.enterBox, 1)
         if started:
-            self.drawText(self.screen, self.inputText, self.width/2, self.height/2, self.textSize, self.textColor)
+            self.drawText(self.screen, self.inputText, self.WIDTH/2, self.HEIGHT/2, self.TEXT_SIZE, self.TEXT_COLOR)
 
     def runGame(self):
         #Базовые значения
@@ -136,18 +136,18 @@ class Game:
         #Получение случайного текста и преобразование его в список (перечисленние с конца)
         self.taskText = self.getText()                                                                     
         self.taskTextList = list(self.taskText[::-1])         
-        self.enterBox = [self.width/2-self.fontGame.size(str(self.taskText))[0]/2-15,
-                         self.height/2-self.textSize/2-15,
+        self.enterBox = [self.WIDTH/2-self.fontGame.size(str(self.taskText))[0]/2-15,
+                         self.HEIGHT/2-self.TEXT_SIZE/2-15,
                          int(str(self.fontGame.size(self.taskText)[0]))+30,
-                         self.textSize+30]
+                         self.TEXT_SIZE+30]
 
         #Если не нажата кнопка "Начать" или Enter, вывод текста задания и кнопки для начала
         while not self.gameStart:      
             self.drawGameScreen(0)
-            self.drawText(self.screen, 'Начать', self.width/2, self.height/2, self.textSize, self.textColor)
-            self.drawText(self.screen, "Нажмите 'Начать' или нажмите клавишу Enter", self.width/2, self.height/2+self.textSize*2, 20, self.textColor)
-            self.drawText(self.screen, "Для возврата нажмите Esc", self.width/2, self.height-self.textSize, 20, self.textColor)
-            pg.draw.rect(self.screen, self.textColor, self.enterBox, 1)
+            self.drawText(self.screen, 'Начать', self.WIDTH/2, self.HEIGHT/2, self.TEXT_SIZE, self.TEXT_COLOR)
+            self.drawText(self.screen, "Нажмите 'Начать' или нажмите клавишу Enter", self.WIDTH/2, self.HEIGHT/2+self.TEXT_SIZE*2, 20, self.TEXT_COLOR)
+            self.drawText(self.screen, "Для возврата нажмите Esc", self.WIDTH/2, self.HEIGHT-self.TEXT_SIZE, 20, self.TEXT_COLOR)
+            pg.draw.rect(self.screen, self.TEXT_COLOR, self.enterBox, 1)
             pg.display.update()
             for event in pg.event.get():
                 if event.type == pg.QUIT:                                                                 
@@ -157,7 +157,7 @@ class Game:
                     x, y = pg.mouse.get_pos()
                     if (x > self.enterBox[0]) and (x < self.enterBox[0]+self.enterBox[2]) and \
                        (y > self.enterBox[1]) and (y < self.enterBox[1]+self.enterBox[3]):
-                            pg.draw.rect(self.screen, self.textColor, self.enterBox, 0)
+                            pg.draw.rect(self.screen, self.TEXT_COLOR, self.enterBox, 0)
                             pg.display.update()
                             time.sleep(0.05)
                             self.gameStart = True
@@ -166,7 +166,7 @@ class Game:
                     if event.key == pg.K_ESCAPE:
                         self.runMenu()
                     if event.key == pg.K_RETURN:
-                        pg.draw.rect(self.screen, self.textColor, self.enterBox, 0)
+                        pg.draw.rect(self.screen, self.TEXT_COLOR, self.enterBox, 0)
                         pg.display.update()
                         time.sleep(0.05)
                         self.gameStart = True
@@ -178,7 +178,7 @@ class Game:
             #Вывод прошедшего времени с начала
             self.drawText(self.screen, 
                          (f"Прошло: {self.minutes} минут{self.getSuf(self.minutes)} {self.seconds} секунд{self.getSuf(self.seconds)}"), 
-                          self.width/2, self.height/2-60, 25, self.textColor)
+                          self.WIDTH/2, self.HEIGHT/2-60, 25, self.TEXT_COLOR)
             if not self.gameDone:
                 self.elapsedTime = time.time() - self.startTime                                         
                 self.minutes = int(self.elapsedTime // 60)
@@ -201,7 +201,7 @@ class Game:
                             self.drawGameScreen(1)
                             self.drawText(self.screen, 
                                          (f"Прошло: {self.minutes} минут{self.getSuf(self.minutes)} {self.seconds} секунд{self.getSuf(self.seconds)}"), 
-                                         self.width/2, self.height/2-60, 25, self.textColor)
+                                         self.WIDTH/2, self.HEIGHT/2-60, 25, self.TEXT_COLOR)
                             pg.display.update()
                             time.sleep(1)
                             self.gameDone = True
@@ -219,16 +219,16 @@ class Game:
         #Бесконечный цикл
         while not self.closeGame:            
             #Отрисовка меню
-            self.screen.fill(self.backgroundColor)
-            pg.draw.rect(self.screen, self.textColor, [self.width/2-230, self.height/2-self.menuTextSize/2, 460, self.menuTextSize], 1)
-            self.drawText(self.screen, 'Введите имя и нажмите Enter', self.width/2, self.height/2+self.menuTextSize, 20, self.textColor)
-            self.drawText(self.screen, "Для возврата нажмите Esc", self.width/2, self.height-self.textSize, 20, self.textColor)
+            self.screen.fill(self.BACKGROUND_COLOR)
+            pg.draw.rect(self.screen, self.TEXT_COLOR, [self.WIDTH/2-230, self.HEIGHT/2-self.MENU_TEXT_SIZE/2, 460, self.MENU_TEXT_SIZE], 1)
+            self.drawText(self.screen, 'Введите имя и нажмите Enter', self.WIDTH/2, self.HEIGHT/2+self.MENU_TEXT_SIZE, 20, self.TEXT_COLOR)
+            self.drawText(self.screen, "Для возврата нажмите Esc", self.WIDTH/2, self.HEIGHT-self.TEXT_SIZE, 20, self.TEXT_COLOR)
 
             #Если введено имя, отображается имя игрока, если нет, отображается надпись "Введите имя"
             if not self.name:
-                self.drawText(self.screen, 'Введите имя', self.width/2, self.height/2, self.textSize, self.textColor)
+                self.drawText(self.screen, 'Введите имя', self.WIDTH/2, self.HEIGHT/2, self.TEXT_SIZE, self.TEXT_COLOR)
             
-            self.drawText(self.screen, self.name, self.width/2, self.height/2, self.menuTextSize, self.textColor)
+            self.drawText(self.screen, self.name, self.WIDTH/2, self.HEIGHT/2, self.MENU_TEXT_SIZE, self.TEXT_COLOR)
             pg.display.update()
             for event in pg.event.get():
                 if event.type == pg.QUIT:     
@@ -241,26 +241,26 @@ class Game:
                         self.name = self.name[:-1]
                     elif event.key == pg.K_RETURN:
                         if len(self.name)>0:
-                            if len(self.name)<=self.maxNameLength:
+                            if len(self.name)<=self.MAX_NAME_LENGTH:
                                 self.runGame()  
                     else:
-                        if len(self.name)<self.maxNameLength:
+                        if len(self.name)<self.MAX_NAME_LENGTH:
                             self.name += event.unicode
 
     def runMenu(self):
         while not self.closeGame:
             #Отрисовка меню
-            self.screen.fill(self.backgroundColor)
+            self.screen.fill(self.BACKGROUND_COLOR)
 
             #Отрисовка текста кнопок
-            self.drawText(self.screen, "Старт", self.width/2, self.height/2-self.menuTextSize-self.menuTextIndent, self.menuTextSize, self.textColor)
-            self.drawText(self.screen, "Рекорды", self.width/2, self.height/2, self.menuTextSize, self.textColor)
-            self.drawText(self.screen, "Выход", self.width/2, self.height/2+self.menuTextSize+self.menuTextIndent, self.menuTextSize, self.textColor)
+            self.drawText(self.screen, "Старт", self.WIDTH/2, self.HEIGHT/2-self.MENU_TEXT_SIZE-self.MENU_TEXT_INDENT, self.MENU_TEXT_SIZE, self.TEXT_COLOR)
+            self.drawText(self.screen, "Рекорды", self.WIDTH/2, self.HEIGHT/2, self.MENU_TEXT_SIZE, self.TEXT_COLOR)
+            self.drawText(self.screen, "Выход", self.WIDTH/2, self.HEIGHT/2+self.MENU_TEXT_SIZE+self.MENU_TEXT_INDENT, self.MENU_TEXT_SIZE, self.TEXT_COLOR)
 
             #Отрисовка обрамления кнопок
-            pg.draw.rect(self.screen, self.textColor, self.menuButtons[0], 1)
-            pg.draw.rect(self.screen, self.textColor, self.menuButtons[1], 1)
-            pg.draw.rect(self.screen, self.textColor, self.menuButtons[2], 1)
+            pg.draw.rect(self.screen, self.TEXT_COLOR, self.menuButtons[0], 1)
+            pg.draw.rect(self.screen, self.TEXT_COLOR, self.menuButtons[1], 1)
+            pg.draw.rect(self.screen, self.TEXT_COLOR, self.menuButtons[2], 1)
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:     
@@ -272,24 +272,24 @@ class Game:
                     if (x > self.menuButtons[2][0]) and (x < self.menuButtons[2][0]+self.menuButtons[2][2]) and \
                        (y > self.menuButtons[2][1]) and (y < self.menuButtons[2][1]+self.menuButtons[2][3]):
                         #Отрисовка эффекта нажатия на кнопку
-                        pg.draw.rect(self.screen, (self.textColor), self.menuButtons[2])
-                        self.drawText(self.screen, "Выход", self.width/2, self.height/2+self.menuTextSize+self.menuTextIndent, self.menuTextSize, self.backgroundColor)
+                        pg.draw.rect(self.screen, (self.TEXT_COLOR), self.menuButtons[2])
+                        self.drawText(self.screen, "Выход", self.WIDTH/2, self.HEIGHT/2+self.MENU_TEXT_SIZE+self.MENU_TEXT_INDENT, self.MENU_TEXT_SIZE, self.BACKGROUND_COLOR)
                         pg.display.update()
                         time.sleep(0.1)
                         sys.exit()
 
                     elif (x > self.menuButtons[1][0]) and (x < self.menuButtons[1][0]+self.menuButtons[1][2]) and \
                          (y > self.menuButtons[1][1]) and (y < self.menuButtons[1][1]+self.menuButtons[1][3]):
-                        pg.draw.rect(self.screen, (self.textColor), self.menuButtons[1])
-                        self.drawText(self.screen, "Рекорды", self.width/2, self.height/2, self.menuTextSize, self.backgroundColor)
+                        pg.draw.rect(self.screen, (self.TEXT_COLOR), self.menuButtons[1])
+                        self.drawText(self.screen, "Рекорды", self.WIDTH/2, self.HEIGHT/2, self.MENU_TEXT_SIZE, self.BACKGROUND_COLOR)
                         pg.display.update()
                         time.sleep(0.1)
                         self.runLeaderboard()
 
                     elif (x > self.menuButtons[0][0]) and (x < self.menuButtons[0][0]+self.menuButtons[0][2]) and \
                          (y > self.menuButtons[0][1]) and (y < self.menuButtons[0][1]+self.menuButtons[0][3]):
-                        pg.draw.rect(self.screen, (self.textColor), self.menuButtons[0])
-                        self.drawText(self.screen, "Старт", self.width/2, self.height/2-self.menuTextSize-self.menuTextIndent, self.menuTextSize, self.backgroundColor)
+                        pg.draw.rect(self.screen, (self.TEXT_COLOR), self.menuButtons[0])
+                        self.drawText(self.screen, "Старт", self.WIDTH/2, self.HEIGHT/2-self.MENU_TEXT_SIZE-self.MENU_TEXT_INDENT, self.MENU_TEXT_SIZE, self.BACKGROUND_COLOR)
                         pg.display.update()
                         time.sleep(0.1)
                         self.drawNameMenu()                            
@@ -304,35 +304,35 @@ class Game:
 
         #Отрисовка интерфейса
         while not self.closeGame:
-            self.screen.fill(self.backgroundColor)
-            self.drawText(self.screen, 'Таблица рекордов', self.width/2, self.menuTextSize,self.menuTextSize, self.textColor)
-            self.drawText(self.screen, "Для возврата нажмите Esc", self.width/2, self.height-self.textSize, 20, self.textColor)
-            pg.draw.rect(self.screen, self.textColor, [self.width/2-self.fontMenu.size('Таблица рекордов')[0]/2, 
-                                                       self.menuTextSize/2, self.fontMenu.size('Таблица рекордов')[0], self.menuTextSize], 1)
+            self.screen.fill(self.BACKGROUND_COLOR)
+            self.drawText(self.screen, 'Таблица рекордов', self.WIDTH/2, self.MENU_TEXT_SIZE,self.MENU_TEXT_SIZE, self.TEXT_COLOR)
+            self.drawText(self.screen, "Для возврата нажмите Esc", self.WIDTH/2, self.HEIGHT-self.TEXT_SIZE, 20, self.TEXT_COLOR)
+            pg.draw.rect(self.screen, self.TEXT_COLOR, [self.WIDTH/2-self.fontMenu.size('Таблица рекордов')[0]/2, 
+                                                       self.MENU_TEXT_SIZE/2, self.fontMenu.size('Таблица рекордов')[0], self.MENU_TEXT_SIZE], 1)
 
             for x in range(0,11):
-                pg.draw.rect(self.screen, self.textColor, [self.width/2-self.width/8, 
-                                                           (self.menuTextSize/2+self.textSize*2)+x*self.textSize*1.6, self.width/4, 50], 1)
-                pg.draw.rect(self.screen, self.textColor, [self.width/2-self.width/8*3.5, 
-                                                           (self.menuTextSize/2+self.textSize*2)+x*self.textSize*1.6, self.width/4, 50], 1)
-                pg.draw.rect(self.screen, self.textColor, [self.width/2+self.width/8*1.5, 
-                                                           (self.menuTextSize/2+self.textSize*2)+x*self.textSize*1.6, self.width/4, 50], 1)
+                pg.draw.rect(self.screen, self.TEXT_COLOR, [self.WIDTH/2-self.WIDTH/8, 
+                                                           (self.MENU_TEXT_SIZE/2+self.TEXT_SIZE*2)+x*self.TEXT_SIZE*1.6, self.WIDTH/4, 50], 1)
+                pg.draw.rect(self.screen, self.TEXT_COLOR, [self.WIDTH/2-self.WIDTH/8*3.5, 
+                                                           (self.MENU_TEXT_SIZE/2+self.TEXT_SIZE*2)+x*self.TEXT_SIZE*1.6, self.WIDTH/4, 50], 1)
+                pg.draw.rect(self.screen, self.TEXT_COLOR, [self.WIDTH/2+self.WIDTH/8*1.5, 
+                                                           (self.MENU_TEXT_SIZE/2+self.TEXT_SIZE*2)+x*self.TEXT_SIZE*1.6, self.WIDTH/4, 50], 1)
 
             #Заполнение полей данными из БД
             i = 1           
             for x in self.leaderboardNames:
                 self.leaderboardText = f'{x[0]} | {x[1]//60}:{x[1]%60} мин.'
-                self.leaderboardFont = pg.font.Font(None, self.textSize).render(self.leaderboardText, 1, self.textColor)
+                self.leaderboardFont = pg.font.Font(None, self.TEXT_SIZE).render(self.leaderboardText, 1, self.TEXT_COLOR)
                 
                 if i<12:
-                    self.drawText(self.screen, self.leaderboardText, self.width/2-self.width/8*3.5+self.width/8, 
-                                  self.menuTextSize/2+self.textSize*2+(i-1)*self.textSize*1.6+25, self.textSize-10, self.textColor)
+                    self.drawText(self.screen, self.leaderboardText, self.WIDTH/2-self.WIDTH/8*3.5+self.WIDTH/8, 
+                                  self.MENU_TEXT_SIZE/2+self.TEXT_SIZE*2+(i-1)*self.TEXT_SIZE*1.6+25, self.TEXT_SIZE-10, self.TEXT_COLOR)
                 if i>=12 and i<23:
-                    self.drawText(self.screen, self.leaderboardText, self.width/2-self.width/8+self.width/8, 
-                                  self.menuTextSize/2+self.textSize*2+(i-12)*self.textSize*1.6+25, self.textSize-10, self.textColor)
+                    self.drawText(self.screen, self.leaderboardText, self.WIDTH/2-self.WIDTH/8+self.WIDTH/8, 
+                                  self.MENU_TEXT_SIZE/2+self.TEXT_SIZE*2+(i-12)*self.TEXT_SIZE*1.6+25, self.TEXT_SIZE-10, self.TEXT_COLOR)
                 if i>=23 and i<34:
-                    self.drawText(self.screen, self.leaderboardText, self.width/2+self.width/8*1.5+self.width/8, 
-                                  self.menuTextSize/2+self.textSize*2+(i-23)*self.textSize*1.6+25, self.textSize-10, self.textColor)
+                    self.drawText(self.screen, self.leaderboardText, self.WIDTH/2+self.WIDTH/8*1.5+self.WIDTH/8, 
+                                  self.MENU_TEXT_SIZE/2+self.TEXT_SIZE*2+(i-23)*self.TEXT_SIZE*1.6+25, self.TEXT_SIZE-10, self.TEXT_COLOR)
                 i += 1
                 
             for event in pg.event.get():
